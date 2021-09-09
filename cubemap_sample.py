@@ -8,12 +8,6 @@ def xyzs_to_theta_phi(xyzs): # [..., 3]
   phi = np.arccos(xyzs[..., 1] / length)
   return np.stack([theta, phi], -1)
 
-def cube_xys_to_equally_spaced_theta_phi(xys): # shape: [..., 2], range: [-1, 1]
-  theta = xys[...,0] * math.pi / 4
-  l = (np.tan(theta) ** 2 + 1) ** 0.5
-  phi = np.arctan2(l, -xys[...,1])
-  return np.stack([theta, phi], -1)
-
 # 'The Equi-Angular Cubemap' sample method
 if __name__ == '__main__':
   num = 10
@@ -21,15 +15,11 @@ if __name__ == '__main__':
   offset = step / 2
   xs = np.linspace(-1 + offset, 1 - offset, num)
   xs, ys = np.meshgrid(xs, xs)
-  # xys = np.dstack([xs, ys])
-  # theta_phis = cube_xys_to_equally_spaced_theta_phi(xys)
 
   YS = np.tan(math.pi / 4 * ys)
   ZS = np.tan(math.pi / 4 * xs)
   XS = np.ones_like(YS)
-  # XS = np.sin(theta_phis[...,1]) * np.cos(theta_phis[...,0])
-  # YS = np.cos(theta_phis[...,1])
-  # ZS = np.sin(theta_phis[...,1]) * np.sin(theta_phis[...,0])
+
   XYZS1 = np.dstack([XS, YS, ZS])
   XYZS2 = np.dstack([-XS, YS, -ZS])
   XYZS3 = np.dstack([ZS, XS, YS])
